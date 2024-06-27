@@ -25,7 +25,7 @@ services:
     container_name: ariys_be
     build:
       context: .
-      dockerfile: Dockerfile
+      dockerfile: be.Dockerfile
     env_file:
       - .local.env
     environment:
@@ -46,4 +46,19 @@ services:
       - db
     command: sh -c "scripts/run_service.sh"
 #    command: tail -f /dev/null
+
+  frontend:
+    container_name: react_fe
+    build:
+      context: .
+      dockerfile: fe.Dockerfile
+    environment:
+      - ARIYS_GRAPHQL_URL=http://ariys:8000/graphql/
+    ports:
+      - "3100:3000"
+    depends_on:
+      - ariys
+    volumes:
+      - ./frontend:/app
+    command: sh -c "npm start"
 
