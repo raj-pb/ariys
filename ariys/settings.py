@@ -27,7 +27,14 @@ SECRET_KEY = "django-insecure-ndiw#_@*0)k*h+48iwh7u=4zn6tz8cr9iyn(0!s@2cw3ua^vy4
 DEBUG = True
 
 ALLOWED_HOSTS = [host_name.strip() for host_name in env("ALLOWED_HOSTS").split(",")]
-
+cors_origins = [host_name.strip() for host_name in env("CORS_ALLOWED_ORIGINS").split(",")]
+if "*" in cors_origins:
+    CORS_ALLOW_ALL_ORIGINS = True
+else:
+    CORS_ALLOWED_ORIGINS = cors_origins
+CSRF_TRUSTED_ORIGINS = [
+    origin.strip() for origin in env("CSRF_TRUSTED_ORIGINS").split(",")
+]
 
 # Application definition
 
@@ -38,6 +45,7 @@ INSTALLED_APPS = [
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
+    "corsheaders",
     "inventory",
     "graphene_django",
 ]
@@ -50,6 +58,7 @@ MIDDLEWARE = [
     "django.contrib.auth.middleware.AuthenticationMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
+    "corsheaders.middleware.CorsMiddleware",
 ]
 
 ROOT_URLCONF = "ariys.urls"
